@@ -26,6 +26,10 @@ p {
   background-color: #036856;
   font-size: 75px;
 }
+p:scoreHighlight {
+  border: 6px solid #384B70;
+  font-size: 75px;
+}
 
 .referanceLinks {
   margin: auto;

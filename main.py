@@ -69,9 +69,9 @@ def translateStringToSeconds(timeInput):
 
 db.create_all()
 
-@app.route("/", methods=["GET", "POST"])
-def index():
-    return render_template("homePage.html")
+ultrakillData = None
+doomData = None
+amidEvilData = None
 
 @app.route("/ULTRAKILL", methods=["GET", "POST"])
 def ULTRAKILL():
@@ -94,8 +94,8 @@ def ULTRAKILL():
                     db.session.rollback()
     
     # Order the entries by timeData (in seconds) from low to high
-    ordered_data = timeDatabase.query.order_by(timeDatabase.timeData.asc()).all()
-    return render_template("layer1.html", data=ordered_data, template_form=inputForm)
+    ultrakillData = timeDatabase.query.order_by(timeDatabase.timeData.asc()).all()
+    return render_template("layer1.html", data=ultrakillData, template_form=inputForm)
 
 
 @app.route("/DOOM", methods=["GET", "POST"])
@@ -119,8 +119,8 @@ def DOOM():
                     db.session.rollback()
     
     # Order the entries by timeData (in seconds) from low to high
-    ordered_data = doomTimeDatabase.query.order_by(doomTimeDatabase.timeData.asc()).all()
-    return render_template("layer1.html", data=ordered_data, template_form=inputForm)
+    doomData = doomTimeDatabase.query.order_by(doomTimeDatabase.timeData.asc()).all()
+    return render_template("layer1.html", data=doomData, template_form=inputForm)
 
 @app.route("/AmidEvil", methods=["GET", "POST"])
 def AmidEvil():
@@ -143,7 +143,11 @@ def AmidEvil():
                     db.session.rollback()
     
     # Order the entries by timeData (in seconds) from low to high
-    ordered_data = amidEviltimeDatabase.query.order_by(amidEviltimeDatabase.timeData.asc()).all()
-    return render_template("layer1.html", data=ordered_data, template_form=inputForm)
+    amidEvilData = amidEviltimeDatabase.query.order_by(amidEviltimeDatabase.timeData.asc()).all()
+    return render_template("layer1.html", data=amidEvilData, template_form=inputForm)
+
+@app.route("/", methods=["GET", "POST"])
+def index():
+    return render_template("homePage.html")
 
 app.run(host='0.0.0.0', port=5001)
