@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block content %}
 <!DOCTYPE html>
 <html>
@@ -11,18 +10,14 @@
         <p>
           {{ template_form.givenTimeInput.label }}
           {{ template_form.givenTimeInput() }}
+          {{ template_form.submit_knop() }}
         </p>
-        <p>
-          {{ template_form.runnerName.label }}
-          {{ template_form.runnerName() }}
-        </p>
-        <p>Time input has to be given in hour:minute:second format, so for example: 1:30:21. </p>
-        <p>{{ template_form.submit_knop() }}</p>
+        <p>Time input has to given in hour:minute:second format, so for example: 1:30:21. </p>
     </form>
-
+    
     <ul class="scoreHighlight">
         {% for item in data %}
-          <p> {{ item.timeStringValue }} set by the runner: {{ item.runnerData }}</p>
+          <p>{{ item.title }}</p>
         {% endfor %}
     </ul>
 </body>
