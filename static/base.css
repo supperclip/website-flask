@@ -1,14 +1,25 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box; 
+}
+
 body {
   background-image: url("/static/images/background.jpg");
   color: #FCFAEE;
   font-family: 'Luminari', 'Courier New', monospace;
+  margin: 0;               
+  padding: 0;              
 }
+
 h1 {
   font-size: 75px;
 }
+
 p {
   font-size: 25px;
 }
+
 .center {
   margin: auto;
   width: 75%;
@@ -22,13 +33,25 @@ p {
   margin: auto;
   width: 75%;
   border: 6px solid #384B70;
-  padding: 2px;
+  padding: 0;
   background-color: #036856;
   font-size: 75px;
+  list-style-type: none;
 }
-p:scoreHighlight {
-  border: 6px solid #384B70;
-  font-size: 75px;
+
+.scoreHighlight li {
+  border-bottom: 4px solid #384B70;
+  padding: 8px 0;
+  margin: 0;
+}
+
+.scoreHighlight li:last-child {
+  border-bottom: none;
+}
+
+.scoreHighlight p {
+  margin: 0;
+  padding: 0;
 }
 
 .referanceLinks {
@@ -38,8 +61,8 @@ p:scoreHighlight {
   padding: 5px;
   background-color: #036856;
   font-size: 40px;
-  }
+}
 
-  a:visited {
-    color: #FCFAEE;
+a:visited {
+  color: #FCFAEE;
 }

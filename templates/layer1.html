@@ -20,11 +20,26 @@
         <p>{{ template_form.submit_knop() }}</p>
     </form>
 
-    <ul class="scoreHighlight">
-        {% for item in data %}
-          <p> {{ item.timeStringValue }} set by the runner: {{ item.runnerData }}</p>
-        {% endfor %}
-    </ul>
+    <ul class="scoreHighlight" style="list-style-type: none; padding-left: 0;">
+      {% for item in data %}
+        <li>
+          <p>
+            {% if loop.index == 1 %}
+              1st place —
+            {% elif loop.index == 2 %}
+              2nd place —
+            {% elif loop.index == 3 %}
+              3rd place —
+            {% endif %}
+            {{ item.timeStringValue }} by the runner: {{ item.runnerData }}
+            {% if item.timeDifferenceBetweenRuns is not none %}
+              — {{ translateSeconds(item.timeDifferenceBetweenRuns) }} faster than next slower run
+            {% endif %}
+          </p>
+        </li>
+      {% endfor %}
+  </ul>
+  
 </body>
 </html>
 {% endblock %}

@@ -24,6 +24,7 @@ class timeDatabase(db.Model):
     timeData = db.Column(db.Integer, index=True)
     runnerData = db.Column(db.String(80), index=True)
     timeStringValue = db.Column(db.String(80), index=True)
+    timeDifferenceBetweenRuns = db.Column(db.String(80), index=True)
     __table_args__ = (
         db.UniqueConstraint('timeData', 'runnerData', name='uix_time_runner'),
     )
@@ -33,6 +34,7 @@ class doomTimeDatabase(db.Model):
     timeData = db.Column(db.Integer, index=True)
     runnerData = db.Column(db.String(80), index=True)
     timeStringValue = db.Column(db.String(80), index=True)
+    timeDifferenceBetweenRuns = db.Column(db.String(80), index=True)
     __table_args__ = (
         db.UniqueConstraint('timeData', 'runnerData', name='uix_time_runner'),
     )
@@ -42,6 +44,7 @@ class amidEviltimeDatabase(db.Model):
     timeData = db.Column(db.Integer, index=True)
     runnerData = db.Column(db.String(80), index=True)
     timeStringValue = db.Column(db.String(80), index=True)
+    timeDifferenceBetweenRuns = db.Column(db.String(80), index=True)
     __table_args__ = (
         db.UniqueConstraint('timeData', 'runnerData', name='uix_time_runner'),
     )
@@ -66,6 +69,14 @@ def translateStringToSeconds(timeInput):
         return total_seconds
     except ValueError:
         return False
+    
+def translateSecondsToString(seconds):
+    if seconds is None:
+        return ""
+    hours = seconds // 3600
+    minutes = (seconds % 3600) // 60
+    secs = seconds % 60
+    return f"{hours}:{minutes:02}:{secs:02}"
 
 db.create_all()
 
@@ -92,11 +103,17 @@ def ULTRAKILL():
                     db.session.commit()
                 except IntegrityError:
                     db.session.rollback()
-    
-    # Order the entries by timeData (in seconds) from low to high
     ultrakillData = timeDatabase.query.order_by(timeDatabase.timeData.asc()).all()
-    return render_template("layer1.html", data=ultrakillData, template_form=inputForm)
+    for i in range(len(ultrakillData) - 1):
+        current = ultrakillData[i]
+        next_entry = ultrakillData[i + 1]
+        difference = next_entry.timeData - current.timeData
+        if current.timeDifferenceBetweenRuns != difference:
+            current.timeDifferenceBetweenRuns = difference
+    if ultrakillData:
+        ultrakillData[-1].timeDifferenceBetweenRuns = None
 
+    return render_template("layer1.html", data=ultrakillData, template_form=inputForm, translateSeconds=translateSecondsToString)
 
 @app.route("/DOOM", methods=["GET", "POST"])
 def DOOM():
@@ -117,10 +134,17 @@ def DOOM():
                     db.session.commit()
                 except IntegrityError:
                     db.session.rollback()
-    
-    # Order the entries by timeData (in seconds) from low to high
     doomData = doomTimeDatabase.query.order_by(doomTimeDatabase.timeData.asc()).all()
-    return render_template("layer1.html", data=doomData, template_form=inputForm)
+    for i in range(len(doomData) - 1):
+        current = doomData[i]
+        next_entry = doomData[i + 1]
+        difference = next_entry.timeData - current.timeData
+        if current.timeDifferenceBetweenRuns != difference:
+            current.timeDifferenceBetweenRuns = difference
+    if doomData:
+        doomData[-1].timeDifferenceBetweenRuns = None
+
+    return render_template("layer1.html", data=doomData, template_form=inputForm, translateSeconds=translateSecondsToString)
 
 @app.route("/AmidEvil", methods=["GET", "POST"])
 def AmidEvil():
@@ -141,10 +165,17 @@ def AmidEvil():
                     db.session.commit()
                 except IntegrityError:
                     db.session.rollback()
-    
-    # Order the entries by timeData (in seconds) from low to high
     amidEvilData = amidEviltimeDatabase.query.order_by(amidEviltimeDatabase.timeData.asc()).all()
-    return render_template("layer1.html", data=amidEvilData, template_form=inputForm)
+    for i in range(len(amidEvilData) - 1):
+        current = amidEvilData[i]
+        next_entry = amidEvilData[i + 1]
+        difference = next_entry.timeData - current.timeData
+        if current.timeDifferenceBetweenRuns != difference:
+            current.timeDifferenceBetweenRuns = difference
+    if amidEvilData:
+        amidEvilData[-1].timeDifferenceBetweenRuns = None
+
+    return render_template("layer1.html", data=amidEvilData, template_form=inputForm, translateSeconds=translateSecondsToString)
 
 @app.route("/", methods=["GET", "POST"])
 def index():
